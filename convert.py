@@ -10,7 +10,7 @@ def detect_encoding(file_path):
         return result['encoding']
 
 def split_into_chapters(text):
-    # 匹配「第1章」、「第十二章」这种
+    # 匹配章节标题，比如“第1章”，“第十二章”等，自动拆分章节
     chapters = re.split(r'(第[\d一二三四五六七八九十百千]+章.*?)\n', text)
     result = []
     if not chapters or len(chapters) < 3:
@@ -45,11 +45,12 @@ def txt_to_epub(txt_file_path, output_path=None):
     book.set_language("zh")
     book.add_author("Auto Converter")
 
-    # 设置封面（默认使用网络图片链接）
-with open("cover.jpg", "rb") as f:
-    book.set_cover("cover.jpg", f.read())
-
-
+    # 读取本地封面图片
+    if os.path.exists("cover.jpg"):
+        with open("cover.jpg", "rb") as f:
+            book.set_cover("cover.jpg", f.read())
+    else:
+        print("未找到 cover.jpg，未设置封面")
 
     chapters = split_into_chapters(text)
     epub_chapters = []
@@ -71,7 +72,7 @@ with open("cover.jpg", "rb") as f:
     print(f"✅ EPUB 已生成：{output_path}")
 
 if __name__ == "__main__":
-    import requests
     for file in os.listdir("."):
         if file.endswith(".txt"):
             txt_to_epub(file)
+
