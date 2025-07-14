@@ -46,8 +46,9 @@ def txt_to_epub(txt_file_path, output_path=None):
     book.add_author("Auto Converter")
 
     # 设置封面（默认使用网络图片链接）
-    cover_url = "https://via.placeholder.com/600x800.png?text=封面"
-    book.set_cover("cover.jpg", requests.get(cover_url).content)
+    with open("cover.jpg", "rb") as f:
+    book.set_cover("cover.jpg", f.read())
+
 
     chapters = split_into_chapters(text)
     epub_chapters = []
