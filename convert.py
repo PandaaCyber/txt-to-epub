@@ -1,13 +1,24 @@
 import os
 import sys
+import chardet
 from ebooklib import epub
+
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        raw_data = f.read(10000)
+        result = chardet.detect(raw_data)
+        return result['encoding']
 
 def txt_to_epub(txt_file_path, output_path=None):
     if not os.path.exists(txt_file_path):
         print("TXT 文件不存在")
         return
 
-    with open(txt_file_path, 'r', encoding='utf-8') as f:
+    # 自动检测文件编码
+    encoding = detect_encoding(txt_file_path)
+    print(f"检测到编码：{encoding}")
+
+    with open(txt_file_path, 'r', encoding=encoding, errors='ignore') as f:
         text = f.read()
 
     html_text = text.replace("\n", "<br/>")
