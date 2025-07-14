@@ -10,6 +10,8 @@ def txt_to_epub(txt_file_path, output_path=None):
     with open(txt_file_path, 'r', encoding='utf-8') as f:
         text = f.read()
 
+    html_text = text.replace("\n", "<br/>")
+
     book = epub.EpubBook()
     book.set_identifier("id123456")
     book.set_title("Converted Book")
@@ -17,7 +19,7 @@ def txt_to_epub(txt_file_path, output_path=None):
     book.add_author("Auto Converter")
 
     chapter = epub.EpubHtml(title='Chapter 1', file_name='chap_01.xhtml', lang='zh')
-    chapter.content = f'<h1>Chapter 1</h1><p>{text.replace("\n", "<br/>")}</p>'
+    chapter.content = f'<h1>Chapter 1</h1><p>{html_text}</p>'
     book.add_item(chapter)
     book.toc = (epub.Link('chap_01.xhtml', 'Chapter 1', 'chap1'),)
     book.add_item(epub.EpubNcx())
